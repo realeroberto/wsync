@@ -1,0 +1,206 @@
+#!/usr/bin/env python
+
+# A small Python utility for synchronizing a local folder with a remote web
+# repository.
+
+# The MIT License (MIT)
+# 
+# Copyright (c) 2014 Roberto Reale
+# 
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+# 
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+# 
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
+
+import getopt
+import hashlib
+import os
+import sys
+import urllib2
+import urlparse
+from sys import stderr
+from CheckableString import *
+
+version = "0.0.4"
+
+
+class RemoteRepo:
+
+    """ The remote repository """
+
+    def get_file(self, url, ignore_base_url=False):
+        if ignore_base_url:
+            full_url = url
+        else:
+            full_url = urlparse.urljoin(self.base_url, url)
+        return urllib2.urlopen(full_url)
+
+    def __init__(self, base_url):
+        self.base_url = base_url
+
+
+class RemoteDigestList(RemoteRepo):
+
+    """ The remote digest list """
+
+    def _retrieve_digest_list(self, list_url):
+        response = self.get_file(list_url, ignore_base_url=True)
+        if response:
+            return response.readlines()
+        else:
+            return None
+
+    def __init__(self, list_url, ignore_path=False):
+        RemoteRepo.__init__(self, None)
+        digest_list = self._retrieve_digest_list(list_url)
+        if digest_list:
+            self.digest_list = digest_list
+            self.ignore_path = ignore_path
+            self.current = 0
+            self.high = len(self.digest_list)
+        else:
+            # TODO add error handling
+            pass
+
+    def __iter__(self):
+        return self
+
+    def __next__(self):
+        if self.current >= self.high:
+            raise StopIteration
+        else:
+            self.current += 1
+            digest_item = self.digest_list[self.current - 1]
+            [digest, full_path] = digest_item.split()
+            if self.ignore_path:
+                path = os.path.basename(full_path)
+            else:
+                path = full_path
+            return [path, digest]
+
+    def next(self):
+        return self.__next__()  # compatibility hack for Python 2.x
+
+
+class LocalCopy:
+
+    """ The local working copy """
+
+    to_get = []
+
+    def check_file(self, path, digest):
+        """ verifies a file's digest """
+        with open(path, "rb") as f:
+            contents = CheckableString(f.read())
+            f.close()
+            return contents.check(digest, hexdigest=True)
+        return None
+        
+    def compare(self):
+        local_files = []
+        for [path, digest] in RemoteDigestList(self.remote_digest_list,
+                                               ignore_path=True):
+            full_path = os.path.join(self.base_path, path)
+            if not os.path.exists(full_path):
+                self.to_get.append(path)
+            elif not self.check_file(full_path, digest):
+                self.to_get.append(path)
+            else:
+                print "file %s is ok" % path
+
+    def write_file(self, name, contents):
+        print "writing file %s" % name
+        with open (os.path.join(self.base_path, name), "wb") as f:
+            f.write(contents)
+
+    def sync(self):
+        for file in self.to_get:
+            print "getting file %s" % file
+            self.write_file(file, self.remote.get_file(file).read())
+
+    def __init__(self, base_path, remote, remote_digest_list):
+        self.base_path = base_path
+        self.remote = remote
+        self.remote_digest_list = remote_digest_list
+
+
+
+def short_usage():
+    print >>stderr, """Usage: wsync [-c PATH] [-l URL] [-r URL]
+Try `wsync --help' for more information."""
+
+
+def full_usage():
+    print >>stderr, """Usage: wsync [-c PATH] [-l URL] [-r URL]
+Synchronize a local copy of remote repository, over HTTP/S.
+
+      --help                 display this help and exit
+  -c, --local-copy PATH      path to local copy, defaults to ENV[WSYNC_LOCAL_COPY]
+  -l, --digest-list URL      url of the digest list, defaults to ENV[WSYNC_DIGEST_LIST]
+  -r, --remote-repo URL      url of the remote repository, defaults to ENV[WSYNC_REMOTE_REPO]"""
+
+
+def main(argv):
+    try:
+        opts, args = getopt.getopt(argv, "hc:l:r:",
+                                         ["help", "local-copy=", "digest-list=", "remote-repo="])
+    except getopt.GetoptError, err:
+        print >>stderr, err
+        short_usage()
+        sys.exit(2)
+
+    local_copy = os.environ.get("WSYNC_LOCAL_COPY")
+    digest_list = os.environ.get("WSYNC_DIGEST_LIST")
+    remote_repo = os.environ.get("WSYNC_REMOTE_REPO")
+
+    for opt, arg in opts:
+        if opt in ("-h", "--help"):
+            full_usage()
+            sys.exit()
+        elif opt in("-c", "--local-copy"):
+            local_copy = arg
+        elif opt in ("-l", "--digest-list"):
+            digest_list = arg
+        elif opt in("-r", "--remote-repo"):
+            remote_repo = arg
+
+    if not local_copy or not digest_list or not remote_repo:
+        if not local_copy:
+            print >>stderr,\
+            "WSYNC_LOCAL_COPY not set in environment and not",\
+            "specified by --local-copy PATH or -c PATH"
+
+        elif not digest_list:
+            print >>stderr,\
+            "WSYNC_DIGEST_LIST not set in environment and not",\
+            "specified by --digest-list URL or -l URL"
+
+        elif not remote_repo:
+            print >>stderr,\
+            "WSYNC_REMOTE_REPO not set in environment and not",\
+            "specified by --remote-repo URL or -r URL"
+
+        short_usage()
+        sys.exit(2)
+
+    remote = RemoteRepo(remote_repo)
+    local = LocalCopy(local_copy, remote, digest_list)
+    local.compare()
+    local.sync()
+
+if __name__ == "__main__":
+    main(sys.argv[1:])

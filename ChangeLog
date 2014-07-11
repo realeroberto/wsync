@@ -1,0 +1,9 @@
+2014-07-11  Roberto Reale  <roberto.reale82@gmail.com>
+
+	* wsync: Rewritten using iterators and object inheritance.  Added
+	main() and command-line arguments parsing.
+
+2014-07-10  Roberto Reale  <roberto.reale82@gmail.com>
+
+	* wsync: A bunch of small improvements.  Depends upon the
+	CheckableString package.
