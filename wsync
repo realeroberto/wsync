@@ -32,10 +32,11 @@ import os
 import sys
 import requests
 import urlparse
+import yaml
 from sys import stderr
 from CheckableString import *
 
-version = "0.0.5"
+version = "0.0.6"
 
 
 class RequestsHandler:
@@ -159,15 +160,20 @@ class LocalCopy:
 
 
 def short_usage():
-    print >>stderr, """Usage: wsync [-c PATH] [-l URL] [-r URL]
+    print >>stderr, """Usage:
+    wsync [-y CONFIG ]
+    wsync [-c PATH] [-l URL] [-r URL]
 Try `wsync --help' for more information."""
 
 
 def full_usage():
-    print >>stderr, """Usage: wsync [-c PATH] [-l URL] [-r URL]
+    print >>stderr, """Usage:
+    wsync [-y CONFIG ]
+    wsync [-c PATH] [-l URL] [-r URL]
 Synchronize a local copy of remote repository, over HTTP/S.
 
       --help                   display this help and exit
+  -y, --config        CONFIG   use config fragment CONFIG
   -c, --local-copy    PATH     path to local copy, defaults to ENV[WSYNC_LOCAL_COPY]
   -l, --digest-list   URL      url of the digest list, defaults to ENV[WSYNC_DIGEST_LIST]
   -r, --remote-repo   URL      url of the remote repository, defaults to ENV[WSYNC_REMOTE_REPO]
@@ -176,13 +182,32 @@ Synchronize a local copy of remote repository, over HTTP/S.
       --SCHEMA-proxy  URL      proxy settings for the SCHEMA protocol"""
 
 
+def search_config(config):
+    # first try user-defined
+    user_home = os.path.expanduser("~")
+    path = os.path.join(user_home, ".wsync", config+".yaml")
+    if os.path.exists(path):
+        return path
+    # then try system-wide
+    path = os.path.join("/etc/wsync.d", config+".yaml")
+    if os.path.exists(path):
+        return path
+
+
+def load_config(path):
+    with open(path, "r") as f:
+        return yaml.load(f)
+        f.close()
+
+
 def main(argv):
     try:
-        opts, args = getopt.getopt(argv, "hc:l:r:",
-                                         ["help", "local-copy=", "digest-list=",
-                                          "remote-repo=", "http-proxy=",
-                                          "https-proxy=", "verify-cert",
-                                          "dont-verify-cert"])
+        opts, args = getopt.getopt(argv, "hy:c:l:r:",
+                                         ["help", "config=", "local-copy=",
+                                          "digest-list=", "remote-repo=",
+                                          "http-proxy=", "https-proxy=",
+                                          "verify-cert", "dont-verify-cert"])
+
     except getopt.GetoptError, err:
         print >>stderr, err
         short_usage()
@@ -192,6 +217,7 @@ def main(argv):
     digest_list_url = os.environ.get("WSYNC_DIGEST_LIST")
     remote_repo_url = os.environ.get("WSYNC_REMOTE_REPO")
 
+    config = None
     verify_cert = True
     proxies = dict()
 
@@ -199,6 +225,9 @@ def main(argv):
         if opt in ("-h", "--help"):
             full_usage()
             sys.exit()
+        elif opt in ("-y", "--config"):
+            config = arg
+            break
         elif opt in("-c", "--local-copy"):
             local_copy_path = arg
         elif opt in ("-l", "--digest-list"):
@@ -215,6 +244,27 @@ def main(argv):
                 verify_cert = True
             elif opt == "--dont-verify-cert":
                 verify_cert = False
+
+    if config:
+        config_path = search_config(config)
+        if not config_path:
+            print >>stderr, "Cannot find config"
+            sys.exit(2)
+        config_contents = load_config(config_path)
+        if config_contents:
+            for key, value in config_contents.iteritems():
+                if key == "local_copy_path":
+                    local_copy_path = value
+                elif key == "digest_list_url":
+                    digest_list_url = value
+                elif key == "remote_repo_url":
+                    remote_repo_url = value
+                elif key == "verify_cert":
+                    verify_cert = value
+                elif key == "http_proxy":
+                    proxies["http"] = value
+                elif key == "https_proxy":
+                    proxies["https"] = value
 
     if not local_copy_path or not digest_list_url or not remote_repo_url:
         if not local_copy_path:
