@@ -1,5 +1,10 @@
 2014-07-14  Roberto Reale  <roberto.reale82@gmail.com>
 
+	* wsync (LocalCopy.sync): Removed spurious call to read().
+	(LocalCopy.write_file): Added `+' to call() mode.
+
+2014-07-14  Roberto Reale  <roberto.reale82@gmail.com>
+
 	* wsync: Implemented support for YAML configuration files.
 
 2014-07-14  Roberto Reale  <roberto.reale82@gmail.com>

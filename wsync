@@ -144,13 +144,13 @@ class LocalCopy:
 
     def write_file(self, name, contents):
         print "writing file %s" % name
-        with open (os.path.join(self.base_path, name), "wb") as f:
+        with open (os.path.join(self.base_path, name), "wb+") as f:
             f.write(contents)
 
     def sync(self):
         for file in self.to_get:
             print "getting file %s" % file
-            self.write_file(file, self.remote.get_file(file).read())
+            self.write_file(file, self.remote.get_file(file))
 
     def __init__(self, base_path, remote, remote_digest_list):
         self.base_path = base_path
