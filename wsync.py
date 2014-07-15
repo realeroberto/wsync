@@ -27,19 +27,17 @@
 
 
 import getopt
-import hashlib
 import os
-import sys
 import requests
+import sys
 import urlparse
 import yaml
-from sys import stderr
 from CheckableString import *
 
-version = "0.0.6"
+version = "0.0.7"
 
 
-class RequestsHandler:
+class RequestsHandler(object):
 
     """ HTTP/S requests handler """
 
@@ -55,7 +53,7 @@ class RequestsHandler:
         self.proxies = proxies
 
 
-class RemoteRepo:
+class RemoteRepo(object):
 
     """ The remote repository """
 
@@ -117,7 +115,7 @@ class RemoteDigestList(RemoteRepo):
         return self.__next__()  # compatibility hack for Python 2.x
 
 
-class LocalCopy:
+class LocalCopy(object):
 
     """ The local working copy """
 
@@ -158,16 +156,105 @@ class LocalCopy:
         self.remote_digest_list = remote_digest_list
 
 
+class Wsync(object):
+
+    """ Wsync object """
+
+    def sync(self):
+        requests_handlers = RequestsHandler(self.verify_cert, self.proxies)
+        if not requests_handlers:
+            print >>sys.stderr, "Cannot instantiate requests handler"
+            sys.exit(1)
+
+        remote_repo = RemoteRepo(self.remote_repo_url, requests_handlers)
+
+        remote_digest_list = RemoteDigestList(self.digest_list_url,
+                                              requests_handlers,
+                                              ignore_path=True)
+
+        local = LocalCopy(self.local_copy_path, remote_repo, remote_digest_list)
+
+        local.compare()
+        local.sync()
+
+    def set_local_copy_path(self, value):
+        self.local_copy_path = value
+
+    def set_digest_list_url(self, value):
+        self.digest_list_url = value
+
+    def set_remote_repo_url(self, value):
+        self.remote_repo_url = value
+
+    def set_verify_cert(self, value):
+        self.verify_cert = value
+
+    def add_proxy(self, schema, url):
+        self.proxies[schema] = url
+
+    def __init__(self, local_copy_path=None, digest_list_url=None,
+                 remote_repo_url=None):
+        self.local_copy_path = local_copy_path
+        self.digest_list_url = digest_list_url
+        self.remote_repo_url = remote_repo_url
+        self.verify_cert = False
+        self.proxies = dict()
+
+
+class WsyncByConfigFile(Wsync):
+
+    """ Wsync object, defined by config file """
+
+    def search_config(self, tag):
+        if not tag:
+            return None
+        config_file = tag + ".yaml"
+        # first try user-defined
+        user_home = os.path.expanduser("~")
+        path = os.path.join(user_home, ".wsync", config_file)
+        if os.path.exists(path):
+            return path
+        # then try system-wide
+        path = os.path.join("/etc/wsync.d", config_file)
+        if os.path.exists(path):
+            return path
+
+    def load_config(self, tag):
+        path = self.search_config(tag)
+        if not path:
+            return False
+        with open(path, "r") as f:
+            config = yaml.load(f)
+            f.close()
+            for key, value in config.iteritems():
+                if key == "local_copy_path":
+                    self.set_local_copy_path(value)
+                elif key == "digest_list_url":
+                    self.set_digest_list_url(value)
+                elif key == "remote_repo_url":
+                    self.set_remote_repo_url(value)
+                elif key == "verify_cert":
+                    self.set_verify_cert(value)
+                elif key == "http_proxy":
+                    self.add_proxy("http", value)
+                elif key == "https_proxy":
+                    self.add_proxy("https", value)
+            return True
+
+    def __init__(self):
+        Wsync.__init__(self)
+
+
 
 def short_usage():
-    print >>stderr, """Usage:
+    print >>sys.stderr, """Usage:
     wsync [-y CONFIG ]
     wsync [-c PATH] [-l URL] [-r URL]
 Try `wsync --help' for more information."""
 
 
 def full_usage():
-    print >>stderr, """Usage:
+    print >>sys.stderr, """Usage:
     wsync [-y CONFIG ]
     wsync [-c PATH] [-l URL] [-r URL]
 Synchronize a local copy of remote repository, over HTTP/S.
@@ -182,24 +269,6 @@ Synchronize a local copy of remote repository, over HTTP/S.
       --SCHEMA-proxy  URL      proxy settings for the SCHEMA protocol"""
 
 
-def search_config(config):
-    # first try user-defined
-    user_home = os.path.expanduser("~")
-    path = os.path.join(user_home, ".wsync", config+".yaml")
-    if os.path.exists(path):
-        return path
-    # then try system-wide
-    path = os.path.join("/etc/wsync.d", config+".yaml")
-    if os.path.exists(path):
-        return path
-
-
-def load_config(path):
-    with open(path, "r") as f:
-        return yaml.load(f)
-        f.close()
-
-
 def main(argv):
     try:
         opts, args = getopt.getopt(argv, "hy:c:l:r:",
@@ -209,7 +278,7 @@ def main(argv):
                                           "verify-cert", "dont-verify-cert"])
 
     except getopt.GetoptError, err:
-        print >>stderr, err
+        print >>sys.stderr, err
         short_usage()
         sys.exit(2)
 
@@ -217,7 +286,7 @@ def main(argv):
     digest_list_url = os.environ.get("WSYNC_DIGEST_LIST")
     remote_repo_url = os.environ.get("WSYNC_REMOTE_REPO")
 
-    config = None
+    config_tag = None
     verify_cert = True
     proxies = dict()
 
@@ -226,7 +295,7 @@ def main(argv):
             full_usage()
             sys.exit()
         elif opt in ("-y", "--config"):
-            config = arg
+            config_tag = arg
             break
         elif opt in("-c", "--local-copy"):
             local_copy_path = arg
@@ -245,57 +314,42 @@ def main(argv):
             elif opt == "--dont-verify-cert":
                 verify_cert = False
 
-    if config:
-        config_path = search_config(config)
-        if not config_path:
-            print >>stderr, "Cannot find config"
+    if config_tag:
+        wsync = WsyncByConfigFile()
+
+        if not wsync.load_config(config_tag):
+            print >>sys.stderr, "Cannot find config"
             sys.exit(2)
-        config_contents = load_config(config_path)
-        if config_contents:
-            for key, value in config_contents.iteritems():
-                if key == "local_copy_path":
-                    local_copy_path = value
-                elif key == "digest_list_url":
-                    digest_list_url = value
-                elif key == "remote_repo_url":
-                    remote_repo_url = value
-                elif key == "verify_cert":
-                    verify_cert = value
-                elif key == "http_proxy":
-                    proxies["http"] = value
-                elif key == "https_proxy":
-                    proxies["https"] = value
 
-    if not local_copy_path or not digest_list_url or not remote_repo_url:
-        if not local_copy_path:
-            print >>stderr,\
-            "WSYNC_LOCAL_COPY not set in environment and not",\
-            "specified by --local-copy PATH or -c PATH"
+    else:
+        if not local_copy_path or not digest_list_url or not remote_repo_url:
+            if not local_copy_path:
+                print >>sys.stderr,\
+                "WSYNC_LOCAL_COPY not set in environment and not",\
+                "specified by --local-copy PATH or -c PATH"
 
-        elif not digest_list_url:
-            print >>stderr,\
-            "WSYNC_DIGEST_LIST not set in environment and not",\
-            "specified by --digest-list URL or -l URL"
+            elif not digest_list_url:
+                print >>sys.stderr,\
+                "WSYNC_DIGEST_LIST not set in environment and not",\
+                "specified by --digest-list URL or -l URL"
 
-        elif not remote_repo_url:
-            print >>stderr,\
-            "WSYNC_REMOTE_REPO not set in environment and not",\
-            "specified by --remote-repo URL or -r URL"
+            elif not remote_repo_url:
+                print >>sys.stderr,\
+                "WSYNC_REMOTE_REPO not set in environment and not",\
+                "specified by --remote-repo URL or -r URL"
 
-        short_usage()
-        sys.exit(2)
+            short_usage()
+            sys.exit(2)
 
-    requests_handlers = RequestsHandler(verify_cert, proxies)
-    if not requests_handlers:
-        print >>stderr, "Cannot instantiate requests handler"
+        wsync = Wsync(local_copy_path, digest_list_url, remote_repo_url)
+        wsync.set_verify_cert(verify_cert)
+        wsync.set_proxies(proxies)
+
+    if not wsync:
+        print >>sys.stderr, "Cannot instantiate sync handler"
         sys.exit(1)
 
-    remote_repo = RemoteRepo(remote_repo_url, requests_handlers)
-    remote_digest_list = RemoteDigestList(digest_list_url, requests_handlers,
-                                          ignore_path=True)
-    local = LocalCopy(local_copy_path, remote_repo, remote_digest_list)
-    local.compare()
-    local.sync()
+    wsync.sync()
 
 if __name__ == "__main__":
     main(sys.argv[1:])

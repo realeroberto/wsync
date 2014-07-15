@@ -1,3 +1,7 @@
+2014-07-15  Roberto Reale  <roberto.reale82@gmail.com>
+
+	* wsync: Restructured as a Python package.  Renamed to wsync.py.
+
 2014-07-14  Roberto Reale  <roberto.reale82@gmail.com>
 
 	* wsync (LocalCopy.sync): Removed spurious call to read().
