@@ -1,3 +1,8 @@
+2014-07-16  Roberto Reale  <roberto.reale82@gmail.com>
+
+	* setup.py: Fixed dependencies.
+	* README.md: Added example.
+
 2014-07-15  Roberto Reale  <roberto.reale82@gmail.com>
 
 	* wsync: Restructured as a Python package.  Renamed to wsync.py.
