@@ -1,6 +1,6 @@
 2017-01-09  Roberto Reale  <roberto.reale@linux.com>
 
-	* wsync.py: Updated copyright.
+	* wsync.py: Updated copyright.  Removed global ``version'' variable.
 	* LICENSE: Updated copyright.
 	* setup.py: Changed author's email and package url.
 	* README.md: Fixed example.  Added INSTALL notes.

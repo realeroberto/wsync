@@ -34,8 +34,6 @@ import urlparse
 import yaml
 from CheckableString import *
 
-version = "0.0.7"
-
 
 class RequestsHandler(object):
 
