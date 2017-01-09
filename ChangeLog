@@ -2,7 +2,7 @@
 
 	* wsync.py: Updated copyright.  Removed global ``version'' variable.
 	Fix reference to module pyCheckableString.
-	* LICENSE: Updated copyright.
+	* LICENSE.txt: Updated copyright.
 	* setup.py: Changed author's email and package url.  Fix reference to
 	module pyCheckableString.
 	* README.md: Fixed example.  Added INSTALL notes.
