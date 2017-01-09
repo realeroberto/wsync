@@ -1,32 +1,37 @@
-2014-07-16  Roberto Reale  <roberto.reale82@gmail.com>
+2017-01-09  Roberto Reale  <roberto.reale@linux.com>
+
+	* setup.py: Changed author's email and package url.
+	* ChangeLog: Changed author's email.
+
+2014-07-16  Roberto Reale  <roberto.reale@linux.com>
 
 	* setup.py: Fixed dependencies.
 	* README.md: Added example.
 
-2014-07-15  Roberto Reale  <roberto.reale82@gmail.com>
+2014-07-15  Roberto Reale  <roberto.reale@linux.com>
 
 	* wsync: Restructured as a Python package.  Renamed to wsync.py.
 
-2014-07-14  Roberto Reale  <roberto.reale82@gmail.com>
+2014-07-14  Roberto Reale  <roberto.reale@linux.com>
 
 	* wsync (LocalCopy.sync): Removed spurious call to read().
 	(LocalCopy.write_file): Added `+' to call() mode.
 
-2014-07-14  Roberto Reale  <roberto.reale82@gmail.com>
+2014-07-14  Roberto Reale  <roberto.reale@linux.com>
 
 	* wsync: Implemented support for YAML configuration files.
 
-2014-07-14  Roberto Reale  <roberto.reale82@gmail.com>
+2014-07-14  Roberto Reale  <roberto.reale@linux.com>
 
 	* wsync: HTTP requests are now handled through Kenneth Reitz's
 	``requests'' module.
 
-2014-07-11  Roberto Reale  <roberto.reale82@gmail.com>
+2014-07-11  Roberto Reale  <roberto.reale@linux.com>
 
 	* wsync: Rewritten using iterators and object inheritance.  Added
 	main() and command-line arguments parsing.
 
-2014-07-10  Roberto Reale  <roberto.reale82@gmail.com>
+2014-07-10  Roberto Reale  <roberto.reale@linux.com>
 
 	* wsync: A bunch of small improvements.  Depends upon the
 	CheckableString package.
