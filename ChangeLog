@@ -1,7 +1,9 @@
 2017-01-09  Roberto Reale  <roberto.reale@linux.com>
 
+	* wsync.py: Updated copyright.
+	* LICENSE: Updated copyright.
 	* setup.py: Changed author's email and package url.
-	* ChangeLog: Changed author's email.
+	* README.md: Fixed example.  Added INSTALL notes.
 
 2014-07-16  Roberto Reale  <roberto.reale@linux.com>
 
