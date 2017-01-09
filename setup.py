@@ -13,6 +13,6 @@ setup(
     install_requires = [ 
     'requests',
     'PyYAML',
-    'CheckableString'
+    'pyCheckableString'
     ]
 )

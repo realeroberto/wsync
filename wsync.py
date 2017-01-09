@@ -32,7 +32,7 @@ import requests
 import sys
 import urlparse
 import yaml
-from CheckableString import *
+from pyCheckableString import *
 
 
 class RequestsHandler(object):
@@ -122,7 +122,7 @@ class LocalCopy(object):
     def check_file(self, path, digest):
         """ verifies a file's digest """
         with open(path, "rb") as f:
-            contents = CheckableString(f.read())
+            contents = pyCheckableString(f.read())
             f.close()
             return contents.check(digest, hexdigest=True)
         return None

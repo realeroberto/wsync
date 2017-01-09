@@ -1,8 +1,10 @@
 2017-01-09  Roberto Reale  <roberto.reale@linux.com>
 
 	* wsync.py: Updated copyright.  Removed global ``version'' variable.
+	Fix reference to module pyCheckableString.
 	* LICENSE: Updated copyright.
-	* setup.py: Changed author's email and package url.
+	* setup.py: Changed author's email and package url.  Fix reference to
+	module pyCheckableString.
 	* README.md: Fixed example.  Added INSTALL notes.
 
 2014-07-16  Roberto Reale  <roberto.reale@linux.com>
