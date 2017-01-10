@@ -1,7 +1,7 @@
 wsync
 =====
 
-[![PyPI](https://img.shields.io/pypi/v/wsync.svg)]()
+[![PyPI](https://img.shields.io/pypi/v/wsync.svg)](https://pypi.python.org/pypi/wsync)
 
 A small Python utility for synchronizing a local folder with a remote web repository.
 
