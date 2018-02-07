@@ -7,7 +7,7 @@ setup(
     'with a remote web repository',
     py_modules = [ 'wsync' ],
     author = 'Roberto Reale',
-    author_email = 'roberto.reale@linux.com',
+    author_email = 'rober.reale@gmail.com',
     url = 'https://github.com/robertoreale/wsync',
     keywords = [ 'wsync', 'sync', 'http', 'https', 'web' ],
     install_requires = [ 
