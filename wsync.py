@@ -190,6 +190,10 @@ class Wsync(object):
     def add_proxy(self, schema, url):
         self.proxies[schema] = url
 
+    def set_proxies(self, proxies):
+        for schema, url in proxies:
+            self.proxies[schema] = url
+
     def __init__(self, local_copy_path=None, digest_list_url=None,
                  remote_repo_url=None):
         self.local_copy_path = local_copy_path
@@ -203,22 +207,21 @@ class WsyncByConfigFile(Wsync):
 
     """ Wsync object, defined by config file """
 
-    def search_config(self, tag):
-        if not tag:
+    def search_config(self, config_file):
+        if not config_file:
             return None
-        config_file = tag + ".yaml"
         # first try user-defined
         user_home = os.path.expanduser("~")
         path = os.path.join(user_home, ".wsync", config_file)
         if os.path.exists(path):
             return path
         # then try system-wide
-        path = os.path.join("/etc/wsync.d", config_file)
+        path = os.path.join("/etc/wsync", config_file)
         if os.path.exists(path):
             return path
 
-    def load_config(self, tag):
-        path = self.search_config(tag)
+    def load_config(self, config_file):
+        path = self.search_config(config_file)
         if not path:
             return False
         with open(path, "r") as f:
@@ -284,7 +287,7 @@ def main(argv):
     digest_list_url = os.environ.get("WSYNC_DIGEST_LIST")
     remote_repo_url = os.environ.get("WSYNC_REMOTE_REPO")
 
-    config_tag = None
+    config_file = None
     verify_cert = True
     proxies = dict()
 
@@ -293,7 +296,7 @@ def main(argv):
             full_usage()
             sys.exit()
         elif opt in ("-y", "--config"):
-            config_tag = arg
+            config_file = arg
             break
         elif opt in("-c", "--local-copy"):
             local_copy_path = arg
@@ -312,10 +315,10 @@ def main(argv):
             elif opt == "--dont-verify-cert":
                 verify_cert = False
 
-    if config_tag:
+    if config_file:
         wsync = WsyncByConfigFile()
 
-        if not wsync.load_config(config_tag):
+        if not wsync.load_config(config_file):
             print >>sys.stderr, "Cannot find config"
             sys.exit(2)
 
