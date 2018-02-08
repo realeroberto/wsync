@@ -31,7 +31,7 @@ Of course, any subsequent execution of the script will detect any change and dow
 You can also the [`testing`](https://github.com/robertoreale/wsync/tree/testing) branch of this repository for a quick test: just do:
 
         wsync  \
-            --digest-list https://raw.githubusercontent.com/robertoreale/wsync/testing/SHA1SUMS 
+            --digest-list https://raw.githubusercontent.com/robertoreale/wsync/testing/SHA1SUMS  \
             --remote-repo https://raw.githubusercontent.com/robertoreale/wsync/testing/
 
 
