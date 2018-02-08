@@ -193,11 +193,12 @@ class Wsync(object):
         for schema, url in proxies:
             self.proxies[schema] = url
 
-    def __init__(self, local_copy_path=None, digest_list_url=None,
-                 remote_repo_url=None):
-        self.local_copy_path = local_copy_path
+    def __init__(self, digest_list_url=None, remote_repo_url=None, local_copy_path=None):
         self.digest_list_url = digest_list_url
         self.remote_repo_url = remote_repo_url
+        if local_copy_path is None:
+            local_copy_path = os.getcwd()
+        self.local_copy_path = local_copy_path
         self.verify_cert = False
         self.proxies = dict()
 
@@ -227,12 +228,12 @@ class WsyncByConfigFile(Wsync):
             config = yaml.load(f)
             f.close()
             for key, value in config.iteritems():
-                if key == "local_copy_path":
-                    self.set_local_copy_path(value)
-                elif key == "digest_list_url":
+                if key == "digest_list_url":
                     self.set_digest_list_url(value)
                 elif key == "remote_repo_url":
                     self.set_remote_repo_url(value)
+                elif key == "local_copy_path":
+                    self.set_local_copy_path(value)
                 elif key == "verify_cert":
                     self.set_verify_cert(value)
                 elif key == "http_proxy":

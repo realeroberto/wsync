@@ -36,21 +36,21 @@ from wsync import Wsync, WsyncByConfigFile
 def short_usage():
     print >>sys.stderr, """Usage:
     wsync [-y CONFIG ]
-    wsync [-c PATH] [-l URL] [-r URL]
+    wsync [-l URL] [-r URL] [-c PATH]
 Try `wsync --help' for more information."""
 
 
 def full_usage():
     print >>sys.stderr, """Usage:
     wsync [-y CONFIG ]
-    wsync [-c PATH] [-l URL] [-r URL]
+    wsync [-l URL] [-r URL] [-c PATH]
 Synchronize a local copy of remote repository, over HTTP/S.
 
       --help                   display this help and exit
   -y, --config        CONFIG   use config fragment CONFIG
-  -c, --local-copy    PATH     path to local copy, defaults to ENV[WSYNC_LOCAL_COPY]
   -l, --digest-list   URL      url of the digest list, defaults to ENV[WSYNC_DIGEST_LIST]
   -r, --remote-repo   URL      url of the remote repository, defaults to ENV[WSYNC_REMOTE_REPO]
+  -c, --local-copy    PATH     path to local copy, defaults to ENV[WSYNC_LOCAL_COPY]
       --verify-cert            verify SSL certificates
       --dont-verify-cert       disable verifying SSL certificates
       --SCHEMA-proxy  URL      proxy settings for the SCHEMA protocol"""
@@ -61,9 +61,9 @@ def main(argv=None):
         argv = sys.argv[1:]
 
     try:
-        opts, args = getopt.getopt(argv, "hy:c:l:r:",
-                                         ["help", "config=", "local-copy=",
-                                          "digest-list=", "remote-repo=",
+        opts, args = getopt.getopt(argv, "hy:l:r:c:",
+                                         ["help", "config=", "digest-list=",
+                                          "remote-repo=", "local-copy=",
                                           "http-proxy=", "https-proxy=",
                                           "verify-cert", "dont-verify-cert"])
 
@@ -72,9 +72,9 @@ def main(argv=None):
         short_usage()
         sys.exit(2)
 
-    local_copy_path = os.environ.get("WSYNC_LOCAL_COPY")
     digest_list_url = os.environ.get("WSYNC_DIGEST_LIST")
     remote_repo_url = os.environ.get("WSYNC_REMOTE_REPO")
+    local_copy_path = os.environ.get("WSYNC_LOCAL_COPY")
 
     config_file = None
     verify_cert = True
@@ -87,12 +87,12 @@ def main(argv=None):
         elif opt in ("-y", "--config"):
             config_file = arg
             break
-        elif opt in("-c", "--local-copy"):
-            local_copy_path = arg
         elif opt in ("-l", "--digest-list"):
             digest_list_url = arg
         elif opt in("-r", "--remote-repo"):
             remote_repo_url = arg
+        elif opt in("-c", "--local-copy"):
+            local_copy_path = arg
         elif opt in("--http-proxy", "--https-proxy"):
             if opt == "--http-proxy":
                 proxies["http"] = arg
@@ -129,7 +129,7 @@ def main(argv=None):
         if not local_copy_path:
             local_copy_path = os.getcwd()
 
-        wsync = Wsync(local_copy_path, digest_list_url, remote_repo_url)
+        wsync = Wsync(digest_list_url, remote_repo_url, local_copy_path)
         wsync.set_verify_cert(verify_cert)
         wsync.set_proxies(proxies)
 
