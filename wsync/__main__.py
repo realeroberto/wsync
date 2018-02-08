@@ -112,13 +112,8 @@ def main(argv=None):
             sys.exit(2)
 
     else:
-        if not local_copy_path or not digest_list_url or not remote_repo_url:
-            if not local_copy_path:
-                print >>sys.stderr,\
-                "WSYNC_LOCAL_COPY not set in environment and not",\
-                "specified by --local-copy PATH or -c PATH"
-
-            elif not digest_list_url:
+        if not digest_list_url or not remote_repo_url:
+            if not digest_list_url:
                 print >>sys.stderr,\
                 "WSYNC_DIGEST_LIST not set in environment and not",\
                 "specified by --digest-list URL or -l URL"
@@ -130,6 +125,9 @@ def main(argv=None):
 
             short_usage()
             sys.exit(2)
+
+        if not local_copy_path:
+            local_copy_path = os.getcwd()
 
         wsync = Wsync(local_copy_path, digest_list_url, remote_repo_url)
         wsync.set_verify_cert(verify_cert)
