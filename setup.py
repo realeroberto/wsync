@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name = 'wsync',
-    version = '0.0.8.2',
+    version = '0.9',
     description = 'A small Python utility for synchronizing a local folder '\
     'with a remote web repository',
     packages = [ 'wsync' ],
