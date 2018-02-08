@@ -28,11 +28,9 @@
 
 import getopt
 import os
-import requests
 import sys
-import urlparse
-import yaml
-from pyCheckableString import *
+
+from wsync import Wsync, WsyncByConfigFile
 
 
 def short_usage():
@@ -58,7 +56,10 @@ Synchronize a local copy of remote repository, over HTTP/S.
       --SCHEMA-proxy  URL      proxy settings for the SCHEMA protocol"""
 
 
-def main(argv):
+def main(argv=None):
+    if argv is None:
+        argv = sys.argv[1:]
+
     try:
         opts, args = getopt.getopt(argv, "hy:c:l:r:",
                                          ["help", "config=", "local-copy=",
@@ -141,4 +142,6 @@ def main(argv):
     wsync.sync()
 
 if __name__ == "__main__":
-    main(sys.argv[1:])
+    main()
+
+# vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4

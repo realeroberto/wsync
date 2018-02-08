@@ -5,14 +5,23 @@ setup(
     version = '0.0.8.2',
     description = 'A small Python utility for synchronizing a local folder '\
     'with a remote web repository',
-    py_modules = [ 'wsync' ],
+    packages = [ 'wsync' ],
     author = 'Roberto Reale',
     author_email = 'rober.reale@gmail.com',
     url = 'https://github.com/robertoreale/wsync',
     keywords = [ 'wsync', 'sync', 'http', 'https', 'web' ],
     install_requires = [ 
-    'requests',
-    'PyYAML',
-    'pyCheckableString'
-    ]
+        'requests',
+        'PyYAML',
+        'pyCheckableString'
+    ],
+    test_suite = 'nose.collector',
+    tests_require = ['nose'],
+    entry_points={
+        'console_scripts': [
+            'wsync = wsync.__main__:main'
+            ]
+        },
 )
+
+# vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4

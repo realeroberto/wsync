@@ -26,13 +26,12 @@
 # SOFTWARE.
 
 
-import getopt
 import os
 import requests
 import sys
 import urlparse
 import yaml
-from pyCheckableString import *
+from pyCheckableString import pyCheckableString
 
 
 class RequestsHandler(object):
@@ -244,3 +243,5 @@ class WsyncByConfigFile(Wsync):
 
     def __init__(self):
         Wsync.__init__(self)
+
+# vim: tabstop=8 expandtab shiftwidth=4 softtabstop=4
