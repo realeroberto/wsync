@@ -1,6 +1,7 @@
 # wsync
 
 [![PyPI](https://img.shields.io/pypi/v/wsync.svg)](https://pypi.python.org/pypi/wsync)
+[![Build Status](https://travis-ci.org/robertoreale/wsync.svg?branch=master)](https://travis-ci.org/robertoreale/wsync)
 
 A small Python utility/module for synchronizing a local folder with a remote web repository.
 
