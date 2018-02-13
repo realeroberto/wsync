@@ -3,7 +3,7 @@ from setuptools import setup
 setup(
     name = 'wsync',
     version = '0.9',
-    description = 'A small Python utility for synchronizing a local folder '\
+    description = 'A small utility for synchronizing a local folder '\
     'with a remote web repository',
     packages = [ 'wsync' ],
     author = 'Roberto Reale',
