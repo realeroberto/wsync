@@ -4,6 +4,7 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Build Status](https://travis-ci.org/robertoreale/wsync.svg?branch=master)](https://travis-ci.org/robertoreale/wsync)
 [![AppVeyor Build Status](https://ci.appveyor.com/api/projects/status/github/robertoreale/wsync)](https://ci.appveyor.com/project/robertoreale/wsync)
+[![Documentation Status](https://readthedocs.org/projects/wsync/badge/?version=latest)](http://wsync.readthedocs.io/en/latest/?badge=latest)
 [![Code Health](https://landscape.io/github/robertoreale/wsync/master/landscape.svg?style=flat)](https://landscape.io/github/robertoreale/wsync/master)
 [![Waffle.io](https://badge.waffle.io/robertoreale/wsync.svg?columns=done)](https://waffle.io/robertoreale/wsync)
 [![Say Thanks!](https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg)](https://saythanks.io/to/robertoreale)
