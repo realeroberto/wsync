@@ -77,7 +77,7 @@ Or:
    :target: https://opensource.org/licenses/MIT
 .. |Build Status| image:: https://travis-ci.org/robertoreale/wsync.svg?branch=master
    :target: https://travis-ci.org/robertoreale/wsync
-.. |AppVeyor Build Status| image:: https://ci.appveyor.com/api/projects/status/github/robertoreale/wsync
+.. |AppVeyor Build Status| image:: https://ci.appveyor.com/api/projects/status/github/robertoreale/wsync?svg=true
    :target: https://ci.appveyor.com/project/robertoreale/wsync/branch/master
 .. |Documentation Status| image:: https://readthedocs.org/projects/wsync/badge/?version=latest
    :target: http://wsync.readthedocs.io/en/latest/?badge=latest
