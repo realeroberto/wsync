@@ -1,7 +1,5 @@
 language: python
 python:
   - "2.7"
-# Install hashlib via easy_install to prevent the following error:
-#   'frozenset' object is not callable
-install: "easy_install hashlib && pip install -r requirements.txt"
+install: "pip install -r requirements.txt"
 script: nosetests
