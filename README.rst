@@ -38,7 +38,7 @@ Of course, any subsequent execution of the script will detect any change
 and download what is needed.
 
 You can also use the
-```testing`` <https://github.com/robertoreale/wsync/tree/testing>`_
+`testing <https://github.com/robertoreale/wsync/tree/testing>`_
 branch of the GitHub repository for a quick test: just do:
 
 ::
