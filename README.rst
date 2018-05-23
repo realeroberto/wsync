@@ -37,9 +37,9 @@ Then it is enough to do as follows:
 Of course, any subsequent execution of the script will detect any change
 and download what is needed.
 
-You can also the
-```testing`` <https://github.com/robertoreale/wsync/tree/testing>`__
-branch of this repository for a quick test: just do:
+You can also use the
+```testing`` <https://github.com/robertoreale/wsync/tree/testing>`_
+branch of the GitHub repository for a quick test: just do:
 
 ::
 
