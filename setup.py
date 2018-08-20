@@ -1,11 +1,18 @@
-from setuptools import setup
+from setuptools import find_packages, setup
+
+with open('README.rst') as f:
+    readme = f.read()
+
+with open('LICENSE.txt') as f:
+    license = f.read()
 
 setup(
     name = 'wsync',
-    version = '0.9.1',
+    version = '0.9.2',
     description = 'A small utility for synchronizing a local folder '\
     'with a remote web repository',
-    packages = [ 'wsync' ],
+    long_description = readme,
+    packages=find_packages(exclude=('tests', 'docs')),
     author = 'Roberto Reale',
     author_email = 'rober.reale@gmail.com',
     url = 'https://github.com/robertoreale/wsync',
