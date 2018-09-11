@@ -8,14 +8,14 @@ with open('LICENSE.txt') as f:
 
 setup(
     name = 'wsync',
-    version = '0.9.2',
+    version = '0.9.3',
     description = 'A small utility for synchronizing a local folder '\
     'with a remote web repository',
     long_description = readme,
     packages=find_packages(exclude=('tests', 'docs')),
     author = 'Roberto Reale',
     author_email = 'rober.reale@gmail.com',
-    url = 'https://github.com/robertoreale/wsync',
+    url = 'https://github.com/reale/wsync',
     keywords = [ 'wsync', 'sync', 'http', 'https', 'web' ],
     install_requires = [ 
         'requests',

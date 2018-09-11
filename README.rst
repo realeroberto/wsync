@@ -2,7 +2,7 @@ wsync
 =====
 
 |PyPI| |License: MIT| |Build Status| |AppVeyor Build Status|
-|Documentation Status| |Coveralls| |Code Health| |Waffle.io| |Say Thanks!|
+|Documentation Status| |Coveralls| |Code Health| |Waffle.io|
 
 A small Python utility/module for synchronizing a local folder with a
 remote web repository.
@@ -38,14 +38,14 @@ Of course, any subsequent execution of the script will detect any change
 and download what is needed.
 
 You can also use the
-`testing <https://github.com/robertoreale/wsync/tree/testing>`_
+`testing <https://github.com/reale/wsync/tree/testing>`_
 branch of the GitHub repository for a quick test: just do:
 
 ::
 
         wsync  \
-            --digest-list https://raw.githubusercontent.com/robertoreale/wsync/testing/SHA1SUMS  \
-            --remote-repo https://raw.githubusercontent.com/robertoreale/wsync/testing/
+            --digest-list https://raw.githubusercontent.com/reale/wsync/testing/SHA1SUMS  \
+            --remote-repo https://raw.githubusercontent.com/reale/wsync/testing/
 
 As a module
 ~~~~~~~~~~~
@@ -68,24 +68,22 @@ Or:
 
 ::
 
-        digest_list_url = "https://raw.githubusercontent.com/robertoreale/wsync/testing/SHA1SUMS"
-        remote_repo_url = "https://raw.githubusercontent.com/robertoreale/wsync/testing/"
+        digest_list_url = "https://raw.githubusercontent.com/reale/wsync/testing/SHA1SUMS"
+        remote_repo_url = "https://raw.githubusercontent.com/reale/wsync/testing/"
 
 .. |PyPI| image:: https://img.shields.io/pypi/v/wsync.svg
    :target: https://pypi.python.org/pypi/wsync
 .. |License: MIT| image:: https://img.shields.io/badge/License-MIT-yellow.svg
    :target: https://opensource.org/licenses/MIT
-.. |Build Status| image:: https://travis-ci.org/robertoreale/wsync.svg?branch=master
-   :target: https://travis-ci.org/robertoreale/wsync
-.. |AppVeyor Build Status| image:: https://ci.appveyor.com/api/projects/status/github/robertoreale/wsync?svg=true
-   :target: https://ci.appveyor.com/project/robertoreale/wsync/branch/master
+.. |Build Status| image:: https://travis-ci.org/reale/wsync.svg?branch=master
+   :target: https://travis-ci.org/reale/wsync
+.. |AppVeyor Build Status| image:: https://ci.appveyor.com/api/projects/status/github/reale/wsync?svg=true
+   :target: https://ci.appveyor.com/project/reale/wsync/branch/master
 .. |Documentation Status| image:: https://readthedocs.org/projects/wsync/badge/?version=latest
    :target: http://wsync.readthedocs.io/en/latest/?badge=latest
-.. |Coveralls| image:: https://coveralls.io/repos/github/robertoreale/wsync/badge.svg?branch=master
-   :target: https://coveralls.io/github/robertoreale/wsync?branch=master
-.. |Code Health| image:: https://landscape.io/github/robertoreale/wsync/master/landscape.svg?style=flat
-   :target: https://landscape.io/github/robertoreale/wsync/master
-.. |Waffle.io| image:: https://badge.waffle.io/robertoreale/wsync.svg?columns=done
-   :target: https://waffle.io/robertoreale/wsync
-.. |Say Thanks!| image:: https://img.shields.io/badge/Say%20Thanks-!-1EAEDB.svg
-   :target: https://saythanks.io/to/robertoreale
+.. |Coveralls| image:: https://coveralls.io/repos/github/reale/wsync/badge.svg?branch=master
+   :target: https://coveralls.io/github/reale/wsync?branch=master
+.. |Code Health| image:: https://landscape.io/github/reale/wsync/master/landscape.svg?style=flat
+   :target: https://landscape.io/github/reale/wsync/master
+.. |Waffle.io| image:: https://badge.waffle.io/reale/wsync.svg?columns=done
+   :target: https://waffle.io/reale/wsync
