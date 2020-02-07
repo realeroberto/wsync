@@ -8,7 +8,7 @@ with open('LICENSE.txt') as f:
 
 setup(
     name = 'wsync',
-    version = '0.9.3',
+    version = '0.9.4',
     description = 'A small utility for synchronizing a local folder '\
     'with a remote web repository',
     long_description = readme,
