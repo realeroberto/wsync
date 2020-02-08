@@ -75,8 +75,8 @@ Or:
    :target: https://pypi.python.org/pypi/wsync
 .. |License: MIT| image:: https://img.shields.io/badge/License-MIT-yellow.svg
    :target: https://opensource.org/licenses/MIT
-.. |Build Status| image:: https://travis-ci.org/reale/wsync.svg?branch=master
-   :target: https://travis-ci.org/reale/wsync
+.. |Build Status| image:: https://travis-ci.com/reale/wsync.svg?branch=master
+   :target: https://travis-ci.com/reale/wsync
 .. |AppVeyor Build Status| image:: https://ci.appveyor.com/api/projects/status/github/reale/wsync?svg=true
    :target: https://ci.appveyor.com/project/reale/wsync/branch/master
 .. |Documentation Status| image:: https://readthedocs.org/projects/wsync/badge/?version=latest
