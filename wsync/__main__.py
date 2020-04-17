@@ -30,18 +30,18 @@ import getopt
 import os
 import sys
 
-from wsync import Wsync, WsyncByConfigFile
+from .wsync import Wsync, WsyncByConfigFile
 
 
 def short_usage():
-    print >>sys.stderr, """Usage:
+    print("""Usage:
     wsync [-y CONFIG ]
     wsync [-l URL] [-r URL] [-c PATH]
-Try `wsync --help' for more information."""
+Try `wsync --help' for more information.""", file=sys.stderr)
 
 
 def full_usage():
-    print >>sys.stderr, """Usage:
+    print("""Usage:
     wsync [-y CONFIG ]
     wsync [-l URL] [-r URL] [-c PATH]
 Synchronize a local copy of remote repository, over HTTP/S.
@@ -53,7 +53,7 @@ Synchronize a local copy of remote repository, over HTTP/S.
   -c, --local-copy    PATH     path to local copy, defaults to ENV[WSYNC_LOCAL_COPY]
       --verify-cert            verify SSL certificates
       --dont-verify-cert       disable verifying SSL certificates
-      --SCHEMA-proxy  URL      proxy settings for the SCHEMA protocol"""
+      --SCHEMA-proxy  URL      proxy settings for the SCHEMA protocol""", file=sys.stderr)
 
 
 def main(argv=None):
@@ -67,8 +67,8 @@ def main(argv=None):
                                           "http-proxy=", "https-proxy=",
                                           "verify-cert", "dont-verify-cert"])
 
-    except getopt.GetoptError, err:
-        print >>sys.stderr, err
+    except getopt.GetoptError as err:
+        print(err, file=sys.stderr)
         short_usage()
         sys.exit(2)
 
@@ -108,20 +108,18 @@ def main(argv=None):
         wsync = WsyncByConfigFile()
 
         if not wsync.load_config(config_file):
-            print >>sys.stderr, "Cannot find config"
+            print("Cannot find config", file=sys.stderr)
             sys.exit(2)
 
     else:
         if not digest_list_url or not remote_repo_url:
             if not digest_list_url:
-                print >>sys.stderr,\
-                "WSYNC_DIGEST_LIST not set in environment and not",\
-                "specified by --digest-list URL or -l URL"
+                print("WSYNC_DIGEST_LIST not set in environment and not",\
+                "specified by --digest-list URL or -l URL", file=sys.stderr)
 
             elif not remote_repo_url:
-                print >>sys.stderr,\
-                "WSYNC_REMOTE_REPO not set in environment and not",\
-                "specified by --remote-repo URL or -r URL"
+                print("WSYNC_REMOTE_REPO not set in environment and not",\
+                "specified by --remote-repo URL or -r URL", file=sys.stderr)
 
             short_usage()
             sys.exit(2)
@@ -134,7 +132,7 @@ def main(argv=None):
         wsync.set_proxies(proxies)
 
     if not wsync:
-        print >>sys.stderr, "Cannot instantiate sync handler"
+        print("Cannot instantiate sync handler", file=sys.stderr)
         sys.exit(1)
 
     wsync.sync()

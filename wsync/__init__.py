@@ -1,1 +1,1 @@
-from wsync import Wsync, WsyncByConfigFile
+from .wsync import Wsync, WsyncByConfigFile

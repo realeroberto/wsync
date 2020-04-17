@@ -29,7 +29,7 @@
 import os
 import requests
 import sys
-import urlparse
+import urllib.parse
 import yaml
 from alphabet import alphabet
 
@@ -58,7 +58,7 @@ class RemoteRepo(object):
         if ignore_base_url:
             full_url = url
         else:
-            full_url = urlparse.urljoin(self.base_url, url)
+            full_url = urllib.parse.urljoin(self.base_url, url)
         return self.requests_handler.get(full_url)
 
     def __init__(self, base_url, requests_handler):
@@ -73,7 +73,7 @@ class RemoteDigestList(RemoteRepo):
     def _retrieve_digest_list(self, list_url):
         response = self.get_file(list_url, ignore_base_url=True)
         if response:
-            return response.split("\n")
+            return response.decode().split("\n")
         else:
             return None
 
@@ -108,9 +108,6 @@ class RemoteDigestList(RemoteRepo):
                 path = full_path
             return [path, digest]
 
-    def next(self):
-        return self.__next__()  # compatibility hack for Python 2.x
-
 
 class LocalCopy(object):
 
@@ -135,16 +132,16 @@ class LocalCopy(object):
             elif not self.check_file(full_path, digest):
                 self.to_get.append(path)
             else:
-                print "file %s is ok" % path
+                print(("file %s is ok" % path))
 
     def write_file(self, name, contents):
-        print "writing file %s" % name
+        print(("writing file %s" % name))
         with open (os.path.join(self.base_path, name), "wb+") as f:
             f.write(contents)
 
     def sync(self):
         for file in self.to_get:
-            print "getting file %s" % file
+            print(("getting file %s" % file))
             self.write_file(file, self.remote.get_file(file))
 
     def __init__(self, base_path, remote, remote_digest_list):
@@ -160,7 +157,7 @@ class Wsync(object):
     def sync(self):
         requests_handlers = RequestsHandler(self.verify_cert, self.proxies)
         if not requests_handlers:
-            print >>sys.stderr, "Cannot instantiate requests handler"
+            print("Cannot instantiate requests handler", file=sys.stderr)
             sys.exit(1)
 
         remote_repo = RemoteRepo(self.remote_repo_url, requests_handlers)
@@ -227,7 +224,7 @@ class WsyncByConfigFile(Wsync):
         with open(path, "r") as f:
             config = yaml.load(f)
             f.close()
-            for key, value in config.iteritems():
+            for key, value in config.items():
                 if key == "digest_list_url":
                     self.set_digest_list_url(value)
                 elif key == "remote_repo_url":
