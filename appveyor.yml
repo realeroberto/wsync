@@ -17,7 +17,7 @@ install:
   - "%PYTHON%\\python.exe -m pip install wheel"
   - "%PYTHON%\\python.exe -m pip install requests"
   - "%PYTHON%\\python.exe -m pip install PyYAML"
-  - "%PYTHON%\\python.exe -m pip install pyCheckableString"
+  - "%PYTHON%\\python.exe -m pip install alphabet"
 
 build: off
 

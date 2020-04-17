@@ -20,7 +20,7 @@ setup(
     install_requires = [ 
         'requests',
         'PyYAML',
-        'pyCheckableString'
+        'alphabet'
     ],
     test_suite = 'nose.collector',
     tests_require = ['nose'],
