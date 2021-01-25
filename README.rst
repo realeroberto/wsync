@@ -2,7 +2,7 @@ wsync
 =====
 
 |PyPI| |License: MIT| |Build Status| |AppVeyor Build Status|
-|Documentation Status| |Coveralls| |Code Health|
+|Documentation Status| |Coveralls|
 
 A small Python utility/module for synchronizing a local folder with a
 remote web repository.
@@ -83,5 +83,3 @@ Or:
    :target: http://wsync.readthedocs.io/en/latest/?badge=latest
 .. |Coveralls| image:: https://coveralls.io/repos/github/reale/wsync/badge.svg?branch=master
    :target: https://coveralls.io/github/reale/wsync?branch=master
-.. |Code Health| image:: https://landscape.io/github/reale/wsync/master/landscape.svg?style=flat
-   :target: https://landscape.io/github/reale/wsync/master
