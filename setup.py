@@ -14,7 +14,7 @@ setup(
     long_description = readme,
     packages=find_packages(exclude=('tests', 'docs')),
     author = 'Roberto Reale',
-    author_email = 'roberto@reale.me',
+    author_email = 'roberto@reale.info',
     url = 'https://github.com/reale/wsync',
     keywords = [ 'wsync', 'sync', 'http', 'https', 'web' ],
     install_requires = [ 
