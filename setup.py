@@ -20,7 +20,7 @@ setup(
     install_requires = [ 
         'requests',
         'PyYAML',
-        'alphabet'
+        'unhashlib'
     ],
     test_suite = 'nose.collector',
     tests_require = ['nose'],

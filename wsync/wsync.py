@@ -31,7 +31,7 @@ import requests
 import sys
 import urllib.parse
 import yaml
-from alphabet import alphabet
+from unhashlib import unhashlib
 
 
 class RequestsHandler(object):
@@ -118,7 +118,7 @@ class LocalCopy(object):
     def check_file(self, path, digest):
         """ verifies a file's digest """
         with open(path, "rb") as f:
-            contents = alphabet(f.read())
+            contents = unhashlib(f.read())
             f.close()
             return contents.check(digest)
         return None
